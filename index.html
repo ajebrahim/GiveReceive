@@ -1,3 +1,1657 @@
-<html>
-  <pre>Edit this File</pre>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<meta name="theme-color" content="#0f172a">
+
+<title>Give & Receive</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: linear-gradient(180deg, #0f172a, #1e293b);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* ---------------------------------------
+   APPLICATION CONTAINER
+--------------------------------------- */
+
+.app {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* ---------------------------------------
+   SCREENS
+--------------------------------------- */
+
+.screen {
+    display: none;
+    width: 100%;
+    animation: fadeIn 0.25s ease;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------------------------------------
+   HEADER
+--------------------------------------- */
+
+.header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.step {
+    color: #4ade80;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+h1 {
+    font-size: 1.9rem;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+/* ---------------------------------------
+   CARDS
+--------------------------------------- */
+
+.card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+/* ---------------------------------------
+   WELCOME SCREEN
+--------------------------------------- */
+
+.logo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.08);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 46px;
+
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+.nfc-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    background: rgba(34,197,94,0.15);
+
+    color: #4ade80;
+
+    padding: 9px 16px;
+
+    border-radius: 50px;
+
+    font-size: 0.85rem;
+
+    margin-bottom: 20px;
+}
+
+.nfc-dot {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: #4ade80;
+
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.4);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ---------------------------------------
+   BUTTONS
+--------------------------------------- */
+
+.primary-btn {
+    width: 100%;
+
+    border: none;
+
+    background: #10b981;
+
+    color: white;
+
+    padding: 16px;
+
+    border-radius: 14px;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background: #059669;
+}
+
+.secondary-btn {
+    width: 100%;
+
+    margin-top: 12px;
+
+    background: transparent;
+
+    color: white;
+
+    border: 1px solid rgba(255,255,255,0.18);
+
+    padding: 14px;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+}
+
+/* ---------------------------------------
+   TRANSACTION INFORMATION
+--------------------------------------- */
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+
+    margin-bottom: 12px;
+
+    padding-bottom: 12px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.08);
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.label {
+    color: #94a3b8;
+}
+
+.value {
+    font-weight: 600;
+    text-align: right;
+}
+
+.alias {
+    color: #4ade80;
+}
+
+.limit {
+    color: #fbbf24;
+}
+
+/* ---------------------------------------
+   AMOUNT BUTTONS
+--------------------------------------- */
+
+.amount-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.amount-btn {
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    color: white;
+
+    padding: 18px;
+
+    border-radius: 14px;
+
+    font-size: 1.05rem;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.amount-btn:hover {
+
+    border-color: #10b981;
+
+    transform: translateY(-2px);
+}
+
+.amount-btn.selected {
+
+    background: #10b981;
+
+    border-color: #10b981;
+}
+
+/* ---------------------------------------
+   CUSTOM AMOUNT
+--------------------------------------- */
+
+.custom-section {
+    margin-top: 25px;
+}
+
+.custom-label {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #cbd5e1;
+
+    font-size: 0.95rem;
+}
+
+.amount-wrapper {
+    position: relative;
+}
+
+.currency {
+
+    position: absolute;
+
+    left: 15px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color: #cbd5e1;
+
+    pointer-events: none;
+}
+
+#customAmount {
+
+    width: 100%;
+
+    padding:
+        15px
+        15px
+        15px
+        32px;
+
+    border-radius: 12px;
+
+    border:
+        1px solid rgba(255,255,255,0.15);
+
+    background:
+        rgba(255,255,255,0.08);
+
+    color: white;
+
+    font-size: 1.1rem;
+
+    outline: none;
+}
+
+#customAmount:focus {
+
+    border-color: #10b981;
+}
+
+#customAmount::placeholder {
+
+    color: #64748b;
+}
+
+.amount-message {
+
+    margin-top: 9px;
+
+    color: #94a3b8;
+
+    font-size: 0.82rem;
+}
+
+/* ---------------------------------------
+   CONFIRMATION
+--------------------------------------- */
+
+.success-icon {
+
+    width: 76px;
+    height: 76px;
+
+    margin:
+        0 auto 15px;
+
+    border-radius: 50%;
+
+    background: #10b981;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 42px;
+
+    font-weight: bold;
+}
+
+.status {
+
+    text-align: center;
+
+    color: #4ade80;
+
+    font-weight: 600;
+
+    margin-bottom: 18px;
+}
+
+.confirmation {
+
+    text-align: center;
+
+    margin-top: 20px;
+}
+
+.confirmation-label {
+
+    color: #94a3b8;
+
+    font-size: 0.85rem;
+
+    margin-bottom: 6px;
+}
+
+.confirmation-number {
+
+    font-size: 1.35rem;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    word-break: break-all;
+}
+
+.confirmed-amount {
+
+    text-align: center;
+
+    font-size: 2.2rem;
+
+    font-weight: 700;
+
+    color: #4ade80;
+
+    margin:
+        10px 0 20px;
+}
+
+/* ---------------------------------------
+   QR CODE
+--------------------------------------- */
+
+.qr-card {
+
+    text-align: center;
+}
+
+.qr-title {
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+.qr-description {
+
+    color: #94a3b8;
+
+    font-size: 0.82rem;
+
+    line-height: 1.45;
+
+    margin-bottom: 15px;
+}
+
+#qrcode {
+
+    background: white;
+
+    width: 210px;
+
+    height: 210px;
+
+    padding: 10px;
+
+    margin: 0 auto;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+#qrcode img {
+
+    max-width: 100%;
+
+    max-height: 100%;
+}
+
+.location-status {
+
+    margin-top: 12px;
+
+    color: #94a3b8;
+
+    font-size: 0.72rem;
+
+    line-height: 1.4;
+}
+
+/* ---------------------------------------
+   FOOTER
+--------------------------------------- */
+
+.footer {
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 0.78rem;
+
+    margin-top: 18px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+<!-- =================================================
+     SCREEN 1 — WELCOME
+================================================= -->
+
+<section id="welcomeScreen"
+         class="screen active">
+
+    <div class="header">
+
+        <div class="logo">
+            🤝
+        </div>
+
+        <div class="nfc-status">
+
+            <span class="nfc-dot"></span>
+
+            NFC Connection Verified
+
+        </div>
+
+        <h1>
+            Give & Receive
+        </h1>
+
+        <div class="subtitle">
+
+            Welcome to a secure private
+            exchange network.
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <p style="
+            color:#cbd5e1;
+            line-height:1.6;
+            text-align:center;
+            margin-bottom:25px;
+        ">
+
+            Give assistance, receive support,
+            and connect through trusted
+            digital interactions.
+
+        </p>
+
+
+        <button
+            class="primary-btn"
+            onclick="showScreen('givingScreen')">
+
+            Continue
+
+        </button>
+
+    </div>
+
+
+    <div class="footer">
+
+        Tap • Connect • Give • Receive
+
+    </div>
+
+</section>
+
+
+
+<!-- =================================================
+     SCREEN 2 — ANONYMOUS GIVING
+================================================= -->
+
+<section id="givingScreen"
+         class="screen">
+
+
+    <div class="header">
+
+        <div class="step">
+            Step 2 of 3
+        </div>
+
+        <h1>
+            Anonymous Giving
+        </h1>
+
+        <div class="subtitle">
+
+            Select or enter an amount
+            to send anonymously.
+
+        </div>
+
+    </div>
+
+
+    <!-- RECIPIENT INFORMATION -->
+
+    <div class="card">
+
+        <div class="info-row">
+
+            <span class="label">
+                Verified Alias
+            </span>
+
+            <span class="value alias">
+                ASH
+            </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="label">
+                Card Identifier
+            </span>
+
+            <span class="value">
+                GR-8A7X-2041
+            </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="label">
+                Transaction Limit
+            </span>
+
+            <span class="value limit">
+                $20.00 Maximum
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- AMOUNT -->
+
+    <div class="card">
+
+        <div style="
+            margin-bottom:15px;
+            font-weight:600;
+        ">
+
+            Select Amount
+
+        </div>
+
+
+        <div class="amount-grid">
+
+            <button
+                class="amount-btn"
+                onclick="selectAmount(this, 5)">
+
+                $5.00
+
+            </button>
+
+
+            <button
+                class="amount-btn"
+                onclick="selectAmount(this, 10)">
+
+                $10.00
+
+            </button>
+
+
+            <button
+                class="amount-btn"
+                onclick="selectAmount(this, 15)">
+
+                $15.00
+
+            </button>
+
+
+            <button
+                class="amount-btn"
+                onclick="selectAmount(this, 20)">
+
+                $20.00
+
+            </button>
+
+        </div>
+
+
+        <!-- CUSTOM AMOUNT -->
+
+        <div class="custom-section">
+
+            <label
+                class="custom-label"
+                for="customAmount">
+
+                Or Enter Custom Amount
+
+            </label>
+
+
+            <div class="amount-wrapper">
+
+                <span class="currency">
+                    $
+                </span>
+
+                <input
+                    id="customAmount"
+                    type="number"
+                    inputmode="decimal"
+                    step="0.01"
+                    min="0.01"
+                    max="20.00"
+                    placeholder="0.25, 0.50, 2.00, 3.99"
+                    oninput="validateCustomAmount()">
+
+            </div>
+
+
+            <div
+                id="amountMessage"
+                class="amount-message">
+
+                Maximum anonymous transaction:
+                $20.00
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="primary-btn"
+            style="margin-top:20px;"
+            onclick="completeTransaction()">
+
+            Complete Transaction
+
+        </button>
+
+
+        <button
+            class="secondary-btn"
+            onclick="showScreen('welcomeScreen')">
+
+            ← Back
+
+        </button>
+
+
+    </div>
+
+
+    <div class="footer">
+
+        Secure • Private • Anonymous
+
+    </div>
+
+</section>
+
+
+
+<!-- =================================================
+     SCREEN 3 — CONFIRMATION
+================================================= -->
+
+<section id="confirmationScreen"
+         class="screen">
+
+
+    <div class="header">
+
+        <div class="step">
+            Step 3 of 3
+        </div>
+
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+
+        <h1>
+            Transaction Complete
+        </h1>
+
+
+        <div class="subtitle">
+
+            Your anonymous transaction
+            has been completed.
+
+        </div>
+
+    </div>
+
+
+    <!-- TRANSACTION RECEIPT -->
+
+    <div class="card">
+
+        <div class="status">
+
+            ✓ Transaction Confirmed
+
+        </div>
+
+
+        <!-- AMOUNT -->
+
+        <div
+            id="confirmedAmount"
+            class="confirmed-amount">
+
+            $0.00
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="label">
+                Verified Alias
+            </span>
+
+            <span class="value alias">
+                ASH
+            </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="label">
+                Card Identifier
+            </span>
+
+            <span class="value">
+                GR-8A7X-2041
+            </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="label">
+                Transaction Time
+            </span>
+
+            <span
+                id="transactionTime"
+                class="value">
+
+                --
+
+            </span>
+
+        </div>
+
+
+        <div class="confirmation">
+
+            <div class="confirmation-label">
+
+                Confirmation Number
+
+            </div>
+
+
+            <div
+                id="confirmationNumber"
+                class="confirmation-number">
+
+                --
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- QR -->
+
+    <div class="card qr-card">
+
+        <div class="qr-title">
+
+            Scan to Verify Transaction
+
+        </div>
+
+
+        <div class="qr-description">
+
+            The receiver can scan this QR code
+            to verify the confirmation number,
+            amount, transaction time and
+            transaction location.
+
+        </div>
+
+
+        <div id="qrcode"></div>
+
+
+        <div
+            id="locationStatus"
+            class="location-status">
+
+            Obtaining transaction location...
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="primary-btn"
+        onclick="startAgain()">
+
+        New Transaction
+
+    </button>
+
+
+    <div class="footer">
+
+        Give & Receive • Private • Secure • Verified
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+
+<!-- =================================================
+     QR CODE LIBRARY
+================================================= -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">
+</script>
+
+
+
+<script>
+
+/* =================================================
+   APPLICATION STATE
+================================================= */
+
+let selectedAmount = 0;
+
+let transaction = {
+
+    amount: 0,
+
+    confirmationNumber: "",
+
+    time: null,
+
+    latitude: null,
+
+    longitude: null,
+
+    locationSource: ""
+
+};
+
+
+
+/* =================================================
+   SCREEN NAVIGATION
+================================================= */
+
+function showScreen(screenId) {
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(function(screen) {
+
+            screen.classList.remove("active");
+
+        });
+
+
+    document
+        .getElementById(screenId)
+        .classList.add("active");
+
+
+    window.scrollTo(0, 0);
+
+}
+
+
+
+/* =================================================
+   SELECT QUICK AMOUNT
+================================================= */
+
+function selectAmount(button, amount) {
+
+    document
+        .querySelectorAll(".amount-btn")
+        .forEach(function(btn) {
+
+            btn.classList.remove("selected");
+
+        });
+
+
+    button.classList.add("selected");
+
+
+    document.getElementById(
+        "customAmount"
+    ).value = "";
+
+
+    selectedAmount = amount;
+
+
+    const message =
+        document.getElementById(
+            "amountMessage"
+        );
+
+
+    message.style.color = "#4ade80";
+
+
+    message.textContent =
+        "Selected Amount: $" +
+        amount.toFixed(2);
+
+}
+
+
+
+/* =================================================
+   CUSTOM AMOUNT
+================================================= */
+
+function validateCustomAmount() {
+
+    document
+        .querySelectorAll(".amount-btn")
+        .forEach(function(btn) {
+
+            btn.classList.remove("selected");
+
+        });
+
+
+    const input =
+        document.getElementById(
+            "customAmount"
+        );
+
+
+    const message =
+        document.getElementById(
+            "amountMessage"
+        );
+
+
+    let value =
+        parseFloat(input.value);
+
+
+    if (isNaN(value)) {
+
+        selectedAmount = 0;
+
+        message.style.color =
+            "#94a3b8";
+
+        message.textContent =
+            "Maximum anonymous transaction: $20.00";
+
+        return;
+    }
+
+
+    if (value > 20) {
+
+        selectedAmount = 0;
+
+        message.style.color =
+            "#ef4444";
+
+        message.textContent =
+            "Amount exceeds the $20.00 limit.";
+
+        return;
+    }
+
+
+    if (value <= 0) {
+
+        selectedAmount = 0;
+
+        message.style.color =
+            "#ef4444";
+
+        message.textContent =
+            "Please enter an amount greater than $0.00.";
+
+        return;
+    }
+
+
+    value =
+        Math.round(value * 100) / 100;
+
+
+    selectedAmount = value;
+
+
+    message.style.color =
+        "#4ade80";
+
+
+    message.textContent =
+        "Selected Amount: $" +
+        value.toFixed(2);
+
+}
+
+
+
+/* =================================================
+   COMPLETE TRANSACTION
+================================================= */
+
+function completeTransaction() {
+
+    const input =
+        document.getElementById(
+            "customAmount"
+        );
+
+
+    const customValue =
+        parseFloat(input.value);
+
+
+    if (!isNaN(customValue)) {
+
+        selectedAmount =
+            Math.round(
+                customValue * 100
+            ) / 100;
+
+    }
+
+
+    if (selectedAmount <= 0) {
+
+        alert(
+            "Please select or enter an amount."
+        );
+
+        return;
+    }
+
+
+    if (selectedAmount > 20) {
+
+        alert(
+            "Anonymous transactions cannot exceed $20.00."
+        );
+
+        return;
+    }
+
+
+    /* SAVE TRANSACTION */
+
+    transaction.amount =
+        selectedAmount;
+
+
+    transaction.time =
+        new Date();
+
+
+    transaction.confirmationNumber =
+        generateConfirmationNumber();
+
+
+    /* DISPLAY CONFIRMATION */
+
+    document.getElementById(
+        "confirmedAmount"
+    ).textContent =
+        "$" +
+        transaction.amount.toFixed(2);
+
+
+    document.getElementById(
+        "confirmationNumber"
+    ).textContent =
+        transaction.confirmationNumber;
+
+
+    document.getElementById(
+        "transactionTime"
+    ).textContent =
+        formatDateTime(
+            transaction.time
+        );
+
+
+    /* MOVE TO CONFIRMATION */
+
+    showScreen(
+        "confirmationScreen"
+    );
+
+
+    /* GET LOCATION */
+
+    getLocation();
+
+}
+
+
+
+/* =================================================
+   GENERATE CONFIRMATION NUMBER
+================================================= */
+
+function generateConfirmationNumber() {
+
+    const date =
+        new Date();
+
+
+    const datePart =
+        date.getFullYear() +
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0") +
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+
+    const randomPart =
+        Math.floor(
+            100000 +
+            Math.random() * 900000
+        );
+
+
+    return (
+        "GR-" +
+        datePart +
+        "-" +
+        randomPart
+    );
+
+}
+
+
+
+/* =================================================
+   FORMAT DATE / TIME
+================================================= */
+
+function formatDateTime(date) {
+
+    return (
+
+        date.toLocaleDateString(
+            "en-CA"
+        ) +
+
+        " " +
+
+        date.toLocaleTimeString(
+            "en-CA",
+            {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            }
+        )
+
+    );
+
+}
+
+
+
+/* =================================================
+   GET GPS LOCATION
+================================================= */
+
+function getLocation() {
+
+    const status =
+        document.getElementById(
+            "locationStatus"
+        );
+
+
+    if (!navigator.geolocation) {
+
+        useDemoLocation();
+
+        return;
+    }
+
+
+    status.textContent =
+        "Requesting phone location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            transaction.latitude =
+                position.coords.latitude;
+
+
+            transaction.longitude =
+                position.coords.longitude;
+
+
+            transaction.locationSource =
+                "Phone GPS";
+
+
+            status.innerHTML =
+
+                "Location captured from phone GPS.<br>" +
+
+                "Coordinates: " +
+
+                transaction.latitude.toFixed(6) +
+
+                ", " +
+
+                transaction.longitude.toFixed(6);
+
+
+            generateQRCode();
+
+        },
+
+
+        function() {
+
+            useDemoLocation();
+
+        },
+
+
+        {
+
+            enableHighAccuracy: true,
+
+            timeout: 10000,
+
+            maximumAge: 0
+
+        }
+
+    );
+
+}
+
+
+
+/* =================================================
+   DEMO LOCATION
+================================================= */
+
+function useDemoLocation() {
+
+    /*
+       Demo coordinates only.
+
+       These are used if GPS permission
+       is denied or unavailable.
+    */
+
+    transaction.latitude =
+        53.5444;
+
+
+    transaction.longitude =
+        -113.4909;
+
+
+    transaction.locationSource =
+        "Demo Location";
+
+
+    document.getElementById(
+        "locationStatus"
+    ).innerHTML =
+
+        "Demo location used for this prototype.<br>" +
+
+        "Coordinates: " +
+
+        transaction.latitude.toFixed(6) +
+
+        ", " +
+
+        transaction.longitude.toFixed(6);
+
+
+    generateQRCode();
+
+}
+
+
+
+/* =================================================
+   GENERATE QR CODE
+================================================= */
+
+function generateQRCode() {
+
+    const container =
+        document.getElementById(
+            "qrcode"
+        );
+
+
+    container.innerHTML = "";
+
+
+    const qrData =
+
+        "GIVE & RECEIVE\n\n" +
+
+        "TRANSACTION COMPLETED\n\n" +
+
+        "Confirmation: " +
+
+        transaction.confirmationNumber +
+
+        "\n" +
+
+        "Amount: $" +
+
+        transaction.amount.toFixed(2) +
+
+        "\n" +
+
+        "Alias: ASH\n" +
+
+        "Card ID: GR-8A7X-2041\n" +
+
+        "Transaction Time: " +
+
+        transaction.time.toISOString() +
+
+        "\n" +
+
+        "GPS: " +
+
+        transaction.latitude.toFixed(6) +
+
+        ", " +
+
+        transaction.longitude.toFixed(6) +
+
+        "\n" +
+
+        "Location Source: " +
+
+        transaction.locationSource;
+
+
+    new QRCode(
+
+        container,
+
+        {
+
+            text: qrData,
+
+            width: 190,
+
+            height: 190,
+
+            correctLevel:
+                QRCode.CorrectLevel.M
+
+        }
+
+    );
+
+}
+
+
+
+/* =================================================
+   START NEW TRANSACTION
+================================================= */
+
+function startAgain() {
+
+    selectedAmount = 0;
+
+
+    transaction = {
+
+        amount: 0,
+
+        confirmationNumber: "",
+
+        time: null,
+
+        latitude: null,
+
+        longitude: null,
+
+        locationSource: ""
+
+    };
+
+
+    document.getElementById(
+        "customAmount"
+    ).value = "";
+
+
+    document
+        .querySelectorAll(
+            ".amount-btn"
+        )
+        .forEach(function(btn) {
+
+            btn.classList.remove(
+                "selected"
+            );
+
+        });
+
+
+    document.getElementById(
+        "amountMessage"
+    ).textContent =
+        "Maximum anonymous transaction: $20.00";
+
+
+    document.getElementById(
+        "qrcode"
+    ).innerHTML = "";
+
+
+    showScreen(
+        "welcomeScreen"
+    );
+
+}
+
+</script>
+
+</body>
 </html>
